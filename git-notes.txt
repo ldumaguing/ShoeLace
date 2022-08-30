@@ -9,7 +9,7 @@ status
 ssh-keygen -t rsa -b 4096 -C "zzz@xxx.com"
 
 
-git clone git@github.com:ldumaguing/Programming.git
+git clone git@github.com:ldumaguing/ShoeLace.git
 
 
 
