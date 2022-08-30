@@ -1,0 +1,20 @@
+clone
+add   .
+commit
+push
+pull
+status
+
+
+ssh-keygen -t rsa -b 4096 -C "zzz@xxx.com"
+
+
+git clone git@github.com:ldumaguing/Programming.git
+
+
+
+git add .
+git commit -m "bla"
+git push
+
+
