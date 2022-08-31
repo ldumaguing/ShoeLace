@@ -17,5 +17,5 @@ Free:   0200-fff9
 
 
 gcc hello6_keyboard.c -o hello6 `sdl2-config --cflags --libs` -lSDL2_image
-
+SDL_SetWindowFullscreen(win, 1);
 
