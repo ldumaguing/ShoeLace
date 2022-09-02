@@ -8,7 +8,7 @@ rom:
 	ld65 -t none rom.o -o rom.bin
 
 shoelace:
-	gcc ShoeLace.c -o shoelace
+	gcc ShoeLace.c -o shoelace `sdl2-config --cflags --libs` -lSDL2_image
 
 clean_r:
 	rm rom.bin
