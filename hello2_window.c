@@ -21,7 +21,7 @@ int main(void)
                                        640, 480, 0);
 
 
-SDL_SetWindowFullscreen(win, 1);
+// SDL_SetWindowFullscreen(win, 1);
 
 
     if (!win)
