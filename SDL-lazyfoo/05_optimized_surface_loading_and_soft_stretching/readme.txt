@@ -11,14 +11,3 @@ SDL2main
 
 *nix:
 SDL2
-
-
-
-
-
-
-gcc 04_key_presses.c -o 04_key_presses `sdl2-config --cflags --libs` -lSDL2_image
-
-
-
-
