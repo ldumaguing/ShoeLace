@@ -5,10 +5,6 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-bool init();
-bool loadMedia();
-void close();
-
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gXOut = NULL;
@@ -33,13 +29,16 @@ bool loadMedia() {
 	bool success = true;
 
 	gXOut = SDL_LoadBMP( "x.bmp" );
-	if( gXOut == NULL ) {
+	if( gXOut == NULL )
+	{
 		printf( "Unable to load image %s! SDL Error: %s\n", "x.bmp", SDL_GetError() );
-		success = false; }
+		success = false;
+	}
 
-	return success; }
+	return success;
+}
 
-void close() {
+void closeSDL() {
 	SDL_FreeSurface( gXOut );
 	gXOut = NULL;
 
@@ -54,9 +53,8 @@ int main( int argc, char* args[] ) {
 	else {
 		if( !loadMedia() ) {
 			printf( "Failed to load media!\n" ); }
-		else {			
+		else {
 			bool quit = false;
-
 			SDL_Event e;
 
 			while( !quit ) {
@@ -67,7 +65,11 @@ int main( int argc, char* args[] ) {
 				SDL_BlitSurface( gXOut, NULL, gScreenSurface, NULL );
 				SDL_UpdateWindowSurface( gWindow ); }}}
 
-	close();
+	closeSDL();
 
-	return 0;
-}
+	return 0; }
+
+
+
+
+

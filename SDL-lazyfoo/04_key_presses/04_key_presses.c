@@ -14,11 +14,8 @@ enum KeyPressSurfaces {
 	KEY_PRESS_SURFACE_RIGHT,
 	KEY_PRESS_SURFACE_TOTAL };
 
-bool init();
-bool loadMedia();
-void close();
+SDL_Surface* loadSurface( char* );
 
-SDL_Surface* loadSurface( std::string path );
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gKeyPressSurfaces[ KEY_PRESS_SURFACE_TOTAL ];
@@ -70,7 +67,7 @@ bool loadMedia() {
 
 	return success; }
 
-void close() {
+void closeSDL() {
 	for( int i = 0; i < KEY_PRESS_SURFACE_TOTAL; ++i ) {
 		SDL_FreeSurface( gKeyPressSurfaces[ i ] );
 		gKeyPressSurfaces[ i ] = NULL; }
@@ -80,10 +77,11 @@ void close() {
 
 	SDL_Quit(); }
 
-SDL_Surface* loadSurface( std::string path ) {
-	SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() );
-	if( loadedSurface == NULL )	{
-		printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );	}
+SDL_Surface* loadSurface( char* path ) {
+	puts(path);
+	SDL_Surface* loadedSurface = SDL_LoadBMP( path );
+	if( loadedSurface == NULL ) {
+		printf( "Unable to load image %s! SDL Error: %s\n", path, SDL_GetError() ); }
 
 	return loadedSurface; }
 
@@ -93,7 +91,7 @@ int main( int argc, char* args[] ) {
 	else {
 		if( !loadMedia() ) {
 			printf( "Failed to load media!\n" ); }
-		else {	
+		else {
 			bool quit = false;
 
 			SDL_Event e;
@@ -127,11 +125,10 @@ int main( int argc, char* args[] ) {
 							break; }}}
 
 				SDL_BlitSurface( gCurrentSurface, NULL, gScreenSurface, NULL );
-			
-				SDL_UpdateWindowSurface( gWindow );	}}}
+				SDL_UpdateWindowSurface( gWindow ); }}}
 
-	close();
+	closeSDL();
 
 	return 0; }
-	
-	
+
+
