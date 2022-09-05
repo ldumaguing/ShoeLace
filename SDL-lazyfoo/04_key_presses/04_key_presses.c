@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
 enum KeyPressSurfaces {
 	KEY_PRESS_SURFACE_DEFAULT,
