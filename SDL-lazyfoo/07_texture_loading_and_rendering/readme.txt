@@ -13,3 +13,13 @@ SDL2_image
 *nix:
 SDL2
 SDL2_image
+
+
+
+
+
+
+g++ 07_texture_loading_and_rendering.cpp -o 07_texture_loading_and_rendering `sdl2-config --cflags --libs` -lSDL2_image
+
+
+

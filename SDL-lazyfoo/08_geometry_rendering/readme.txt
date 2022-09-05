@@ -13,3 +13,15 @@ SDL2_image
 *nix:
 SDL2
 SDL2_image
+
+
+
+gcc 08_geometry_rendering.c -o 08_geometry_rendering `sdl2-config --cflags --libs` -lSDL2_image
+
+
+
+
+
+
+
+
