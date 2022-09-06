@@ -23,6 +23,30 @@ gcc 04_key_presses.c -o 04_key_presses `sdl2-config --cflags --libs` -lSDL2_imag
 
 
 
+
+
+
+
+
+SDL_Surface* loadSurface( char* path ) {
+	return loadedSurface = SDL_LoadBMP( path );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 *****************************************************************************************
 Pattern:
 ******************

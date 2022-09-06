@@ -19,7 +19,18 @@ SDL2_image
 
 
 
-gcc 06_extension_libraries_and_loading_other_image_formats.c -o 06_extension_libraries_and_loading_other_image_formats `sdl2-config --cflags --libs` -lSDL2_image
+
+
+
+
+g++ 10_color_keying.cpp -o 10_color_keying `sdl2-config --cflags --libs` -lSDL2_image
+
+
+
+***********************************************************************************************
+NOTES:
+* foo.png is the stick figure
+* foo's background color is set to invisible.
 
 
 

@@ -19,7 +19,15 @@ SDL2_image
 
 
 
-gcc 06_extension_libraries_and_loading_other_image_formats.c -o 06_extension_libraries_and_loading_other_image_formats `sdl2-config --cflags --libs` -lSDL2_image
+
+gcc 09_the_viewport.c -o 09_the_viewport `sdl2-config --cflags --libs` -lSDL2_image
+
+
+
+
+
+
+
 
 
 

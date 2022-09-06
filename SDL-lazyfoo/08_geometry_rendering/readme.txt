@@ -25,3 +25,22 @@ gcc 08_geometry_rendering.c -o 08_geometry_rendering `sdl2-config --cflags --lib
 
 
 
+
+SDL_Window* gWindow = NULL;
+SDL_Renderer* gRenderer = NULL;
+
+SDL_Init( SDL_INIT_VIDEO )
+SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" )
+
+gWindow = SDL_CreateWindow(
+gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
+SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+
+
+
+********************************
+NOTES:
+You deal with the gRenderer.
+
+
