@@ -24,7 +24,7 @@ SDL2_image
 
 
 g++ 10_color_keying.cpp -o 10_color_keying `sdl2-config --cflags --libs` -lSDL2_image
-
+gcc 10_color_keying.c -o 10_color_keying `sdl2-config --cflags --libs` -lSDL2_image
 
 
 ***********************************************************************************************
