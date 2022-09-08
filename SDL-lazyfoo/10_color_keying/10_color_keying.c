@@ -14,14 +14,14 @@ bool init();
 bool loadMedia();
 void closeSDL();
 
-typedef struct {
+typedef struct {  // LTexture
 	SDL_Texture* mTexture;
 	int mWidth;
 	int mHeight;
 
 	bool ( *loadFromFile )( void*, char* );
 	void ( *freeSDL )( void* );
-	void ( *render )( void*, int x, int y );
+	void ( *renderSDL )( void*, int x, int y );
 	int ( *getWidth )( void* );
 	int ( *getHeight )( void* ); } LTexture;
 
@@ -61,24 +61,21 @@ bool loadFromFile( void* self, char* path ) {
 	((LTexture *)self)->mTexture = newTexture;
 	return ((LTexture *)self)->mTexture != NULL; }
 
-void render( void* self, int x, int y ) {
+void renderSDL( void* self, int x, int y ) {
 	SDL_Rect renderQuad = { x, y, ((LTexture *)self)->mWidth, ((LTexture *)self)->mHeight };
 	SDL_RenderCopy( gRenderer, ((LTexture *)self)->mTexture, NULL, &renderQuad ); }
-
-LTexture NEW_LTexture() {
-	LTexture X;
-
-	X.loadFromFile = &loadFromFile;
-	X.freeSDL = &freeSDL;
-	X.render = &render;
-	X.getWidth = &getWidth;
-	X.getHeight = &getHeight;
-
-	return X; }
 
 LTexture gFooTexture;
 LTexture gBackgroundTexture;
 
+void glue_LTexture(LTexture* X) {
+	X->loadFromFile = &loadFromFile;
+	X->freeSDL = &freeSDL;
+	X->renderSDL = &renderSDL;
+	X->getWidth = &getWidth;
+	X->getHeight = &getHeight; }
+
+// ***************************************************************************************
 bool init() {
 	bool success = true;
 	
@@ -108,14 +105,13 @@ bool init() {
 
 	return success; }
 
-
 bool loadMedia() {
 	bool success = true;
 
 	if( !gFooTexture.loadFromFile( &gFooTexture, "foo.png" ) ) {
 		printf( "Failed to load Foo' texture image!\n" );
 		success = false; }
-	
+
 	if( !gBackgroundTexture.loadFromFile( &gBackgroundTexture, "background.png" ) ) {
 		printf( "Failed to load background texture image!\n" );
 		success = false; }
@@ -134,10 +130,11 @@ void closeSDL() {
 	IMG_Quit();
 	SDL_Quit(); }
 
+// ***************************************************************************************
 int main( int argc, char* args[] ) {
-	gFooTexture = NEW_LTexture();
-	gBackgroundTexture = NEW_LTexture();
-
+	glue_LTexture(&gFooTexture);
+	glue_LTexture(&gBackgroundTexture);
+	
 	if( !init() ) {
 		printf( "Failed to initialize!\n" ); }
 	else {
@@ -156,9 +153,9 @@ int main( int argc, char* args[] ) {
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
 
-				gBackgroundTexture.render( &gBackgroundTexture, 0, 0 );
+				gBackgroundTexture.renderSDL( &gBackgroundTexture, 0, 0 );
 
-				gFooTexture.render( &gFooTexture, 240, 190 );
+				gFooTexture.renderSDL( &gFooTexture, 240, 190 );
 
 				SDL_RenderPresent( gRenderer ); }}}
 
