@@ -117,27 +117,27 @@ bool loadMedia() {
 
 	if( !gSpriteSheetTexture.loadFromFile( &gSpriteSheetTexture, "dots.png" ) ) {
 		printf( "Failed to load sprite sheet texture!\n" );
-		success = false; }
-	else {
-		gSpriteClips[ 0 ].x =   0;
-		gSpriteClips[ 0 ].y =   0;
-		gSpriteClips[ 0 ].w = 100;
-		gSpriteClips[ 0 ].h = 100;
+		return false; }
 
-		gSpriteClips[ 1 ].x = 100;
-		gSpriteClips[ 1 ].y =   0;
-		gSpriteClips[ 1 ].w = 100;
-		gSpriteClips[ 1 ].h = 100;
+	gSpriteClips[ 0 ].x =   0;
+	gSpriteClips[ 0 ].y =   0;
+	gSpriteClips[ 0 ].w = 100;
+	gSpriteClips[ 0 ].h = 100;
+
+	gSpriteClips[ 1 ].x = 100;
+	gSpriteClips[ 1 ].y =   0;
+	gSpriteClips[ 1 ].w = 100;
+	gSpriteClips[ 1 ].h = 100;
 		
-		gSpriteClips[ 2 ].x =   0;
-		gSpriteClips[ 2 ].y = 100;
-		gSpriteClips[ 2 ].w = 100;
-		gSpriteClips[ 2 ].h = 100;
+	gSpriteClips[ 2 ].x =   0;
+	gSpriteClips[ 2 ].y = 100;
+	gSpriteClips[ 2 ].w = 100;
+	gSpriteClips[ 2 ].h = 100;
 
-		gSpriteClips[ 3 ].x = 100;
-		gSpriteClips[ 3 ].y = 100;
-		gSpriteClips[ 3 ].w = 100;
-		gSpriteClips[ 3 ].h = 100; }
+	gSpriteClips[ 3 ].x = 100;
+	gSpriteClips[ 3 ].y = 100;
+	gSpriteClips[ 3 ].w = 100;
+	gSpriteClips[ 3 ].h = 100;
 
 	return success; }
 
@@ -180,14 +180,6 @@ int main( int argc, char* args[] ) {
 		gSpriteSheetTexture.render( &gSpriteSheetTexture, 0, SCREEN_HEIGHT - gSpriteClips[ 2 ].h, &gSpriteClips[ 2 ] );
 		gSpriteSheetTexture.render( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[ 3 ].w, SCREEN_HEIGHT - gSpriteClips[ 3 ].h, &gSpriteClips[ 3 ] );
 
-/*
-gSpriteClips[ 0 ].x = 100;
-gSpriteClips[ 0 ].y = 100;
-gSpriteClips[ 0 ].w = 50;
-gSpriteClips[ 0 ].h = 50;
-
-gSpriteSheetTexture.render( &gSpriteSheetTexture, 400, 300, &gSpriteClips[ 0 ] );
-*/
 		SDL_RenderPresent( gRenderer ); }
 
 	closeSDL();
