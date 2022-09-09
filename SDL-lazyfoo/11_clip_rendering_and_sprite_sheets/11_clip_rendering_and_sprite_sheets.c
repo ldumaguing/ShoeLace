@@ -167,6 +167,7 @@ int main( int argc, char* args[] ) {
 
 	SDL_Event e;
 
+/*
 	while( !quit ) {
 		while( SDL_PollEvent( &e ) != 0 ) {
 			if( e.type == SDL_QUIT ) {
@@ -181,6 +182,36 @@ int main( int argc, char* args[] ) {
 		gSpriteSheetTexture.render( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[ 3 ].w, SCREEN_HEIGHT - gSpriteClips[ 3 ].h, &gSpriteClips[ 3 ] );
 
 		SDL_RenderPresent( gRenderer ); }
+*/
+
+SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+SDL_RenderClear( gRenderer );
+
+// blit sprites
+gSpriteSheetTexture.render( &gSpriteSheetTexture, 0, 0, &gSpriteClips[ 0 ] );
+gSpriteSheetTexture.render( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[ 1 ].w, 0, &gSpriteClips[ 1 ] );
+gSpriteSheetTexture.render( &gSpriteSheetTexture, 0, SCREEN_HEIGHT - gSpriteClips[ 2 ].h, &gSpriteClips[ 2 ] );
+gSpriteSheetTexture.render( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[ 3 ].w, SCREEN_HEIGHT - gSpriteClips[ 3 ].h, &gSpriteClips[ 3 ] );
+
+// redefine the first sprite
+gSpriteClips[ 0 ].x = 100;
+gSpriteClips[ 0 ].y = 100;
+gSpriteClips[ 0 ].w = 50;
+gSpriteClips[ 0 ].h = 50;
+
+// blit the first sprite
+gSpriteSheetTexture.render( &gSpriteSheetTexture, 400, 300, &gSpriteClips[ 0 ] );
+
+// render the "canvas"
+SDL_RenderPresent( gRenderer ); 
+
+while( !quit ) {
+	while( SDL_PollEvent( &e ) != 0 ) {
+		if( e.type == SDL_QUIT ) {
+			quit = true; }}
+}
+
+
 
 	closeSDL();
 
