@@ -180,14 +180,6 @@ int main( int argc, char* args[] ) {
 		gSpriteSheetTexture.render( &gSpriteSheetTexture, 0, SCREEN_HEIGHT - gSpriteClips[ 2 ].h, &gSpriteClips[ 2 ] );
 		gSpriteSheetTexture.render( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[ 3 ].w, SCREEN_HEIGHT - gSpriteClips[ 3 ].h, &gSpriteClips[ 3 ] );
 
-/*
-gSpriteClips[ 0 ].x = 100;
-gSpriteClips[ 0 ].y = 100;
-gSpriteClips[ 0 ].w = 50;
-gSpriteClips[ 0 ].h = 50;
-
-gSpriteSheetTexture.render( &gSpriteSheetTexture, 400, 300, &gSpriteClips[ 0 ] );
-*/
 		SDL_RenderPresent( gRenderer ); }
 
 	closeSDL();
