@@ -20,8 +20,11 @@ SDL2_image
 
 
 
-gcc 12_color_modulation.c -o 12_color_modulation `sdl2-config --cflags --libs` -lSDL2_image
 
+
+
+
+gcc 13_alpha_blending.c -o 13_alpha_blending `sdl2-config --cflags --libs` -lSDL2_image
 
 
 
