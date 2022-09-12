@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -118,18 +119,6 @@ typedef struct {
 	void ( *handleEvent )( void*, SDL_Event* e );
 	void ( *move )(void*);
 	void ( *render )(void*); } Dot;
-/*
-Dot::Dot()
-{
-    //Initialize the offsets
-    mPosX = 0;
-    mPosY = 0;
-
-    //Initialize the velocity
-    mVelX = 0;
-    mVelY = 0;
-}
-*/
 
 void Dot__handleEvent( void* self, SDL_Event* e ) {
 	if( e->type == SDL_KEYDOWN && e->key.repeat == 0 ) {
@@ -156,127 +145,145 @@ void Dot__move(void* self) {
     if( ( ((Dot *)self)->mPosY < 0 ) || ( ((Dot *)self)->mPosY + ((Dot *)self)->DOT_HEIGHT > SCREEN_HEIGHT ) ) {
         ((Dot *)self)->mPosY -= ((Dot *)self)->mVelY; }}
 
+
 void Dot__render(void* self) {
-	gDotTexture.render( ((Dot *)self)->mPosX, ((Dot *)self)->mPosY ); }
+	printf("%d, %d\n", ((Dot *)self)->mPosX, ((Dot *)self)->mPosY);
+	LTexture__render( &self, ((Dot *)self)->mPosX, ((Dot *)self)->mPosY, NULL, 0.0, NULL, 0 );
+	//puts("boo");
+}
 
 void glue_LTexture(LTexture* X) {
 
 	#if defined(SDL_TTF_MAJOR_VERSION)
-	X->loadFromRenderedText = &loadFromRenderedText;
+	X->loadFromRenderedText = &LTexture__loadFromRenderedText;
 	#endif
 
-	X->loadFromFile = &loadFromFile;
-	X->free = &free;
-	X->setColor = &setColor;
-	X->setBlendMode = &setBlendMode;
-	X->setAlpha = &setAlpha;
-	X->render = &render;
-	X->getWidth = &getWidth;
-	X->getHeight = &getHeight; }
+	X->loadFromFile = &LTexture__loadFromFile;
+	X->free = &LTexture__free;
+	X->setColor = &LTexture__setColor;
+	X->setBlendMode = &LTexture__setBlendMode;
+	X->setAlpha = &LTexture__setAlpha;
+	X->render = &LTexture__render;
+	X->getWidth = &LTexture__getWidth;
+	X->getHeight = &LTexture__getHeight; }
+
+void glue_Dot(Dot* X){
+	X->handleEvent = &Dot__handleEvent;
+	X->move = &Dot__move;
+	X->render = &Dot__render; }
 
 // ***************************************************************************************
 LTexture gDotTexture;
 LTexture gBGTexture;
 
 bool init() {
-	bool success = true;
-
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
 		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-		success = false; }
-	else {
-		//Set texture filtering to linear
-		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) ) {
-			printf( "Warning: Linear texture filtering not enabled!" ); }
+		return false; }
 
-		//Create window
-		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if( gWindow == NULL ) {
-			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
-			success = false; }
-		else {
-			//Create vsynced renderer for window
-			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-			if( gRenderer == NULL ) {
-				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
-				success = false; }
-			else {
-				//Initialize renderer color
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) ) {
+		printf( "Warning: Linear texture filtering not enabled!" ); }
 
-				//Initialize PNG loading
-				int imgFlags = IMG_INIT_PNG;
-				if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-					success = false; }}}}
+	gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+	if( gWindow == NULL ) {
+		printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+		return false; }
 
-	return success; }
+	gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+	if( gRenderer == NULL ) {
+		printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+		return false; }
+
+	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+	int imgFlags = IMG_INIT_PNG;
+	if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
+		printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+		return false; }
+
+	return true; }
 
 bool loadMedia() {
-	bool success = true;
-
-	if( !gDotTexture.loadFromFile( "dot.bmp" ) ) {
+	if( !gDotTexture.loadFromFile( &gDotTexture, "dot.bmp" ) ) {
 		printf( "Failed to load dot texture!\n" );
-		success = false; }
+		return false; }
 
-	if( !gBGTexture.loadFromFile( "bg.png" ) ) {
+	if( !gBGTexture.loadFromFile( &gBGTexture, "bg.png" ) ) {
 		printf( "Failed to load background texture!\n" );
-		success = false; }
+		return false; }
 
-	return success; }
+	return true; }
 
 void closeSDL() {
-	//Free loaded images
-	gDotTexture.free();
-	gBGTexture.free();
+	gDotTexture.free(&gDotTexture);
+	gBGTexture.free(&gBGTexture);
 
-	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
 
-	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit(); }
 
+// ***************************************************************************************
 int main( int argc, char* args[] ) {
 	glue_LTexture(&gDotTexture);
 	glue_LTexture(&gBGTexture);
 
 	if( !init() ) {
-		printf( "Failed to initialize!\n" ); }
-	else {
-		if( !loadMedia() ) {
-			printf( "Failed to load media!\n" ); }
-		else {
-			bool quit = false;
-			SDL_Event e;
-			Dot dot;
+		printf( "Failed to initialize!\n" );
+		return 1; }
 
-			int scrollingOffset = 0;
+	if( !loadMedia() ) {
+		printf( "Failed to load media!\n" );
+		return 1; }
 
-			while( !quit ) {
-				while( SDL_PollEvent( &e ) != 0 ) {
-					if( e.type == SDL_QUIT ) {
-						quit = true; }
-					dot.handleEvent( e ); }
+	bool quit = false;
+	SDL_Event e;
 
-				dot.move();
+	Dot dot;
+	glue_Dot(&dot);
+	dot.DOT_WIDTH = 20;
+	dot.DOT_HEIGHT = 20;
+	dot.DOT_VEL = 10;
+	dot.mPosX = 0;
+	dot.mPosY = 0;
+	dot.mVelX = 0;
+	dot.mVelY = 0;
 
-				--scrollingOffset;
-				if( scrollingOffset < -gBGTexture.getWidth() ) {
-					scrollingOffset = 0; }
+	int scrollingOffset = 0;
 
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-				SDL_RenderClear( gRenderer );
 
-				gBGTexture.render( scrollingOffset, 0 );
-				gBGTexture.render( scrollingOffset + gBGTexture.getWidth(), 0 );
+	while( !quit ) {
+		while( SDL_PollEvent( &e ) != 0 ) {
+			if( e.type == SDL_QUIT ) {
+				quit = true; }
+			dot.handleEvent( &dot, &e ); 
+			}
 
-				dot.render();
+		dot.move( &dot );
 
-				SDL_RenderPresent( gRenderer ); }}}
+		--scrollingOffset;
+		if( scrollingOffset < -gBGTexture.getWidth(&gBGTexture) ) {
+			scrollingOffset = 0; }
+
+		SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( gRenderer );
+
+		gBGTexture.render( &gBGTexture, scrollingOffset, 0, NULL, 0.0, NULL, 0 );
+		gBGTexture.render( &gBGTexture, scrollingOffset + gBGTexture.getWidth(&gBGTexture), 0, NULL, 0.0, NULL, 0 );
+
+		dot.render(&dot);
+
+		SDL_RenderPresent( gRenderer ); }
+
+
+
+
+
+
+
 
 	closeSDL();
 
