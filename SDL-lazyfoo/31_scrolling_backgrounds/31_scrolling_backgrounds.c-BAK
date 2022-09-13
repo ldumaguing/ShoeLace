@@ -118,7 +118,7 @@ typedef struct {
 
 	void ( *handleEvent )( void*, SDL_Event* e );
 	void ( *move )(void*);
-	void ( *render )(void*, LTexture*); } Dot;
+	void ( *render )(void*); } Dot;
 
 void Dot__handleEvent( void* self, SDL_Event* e ) {
 	if( e->type == SDL_KEYDOWN && e->key.repeat == 0 ) {
@@ -145,15 +145,12 @@ void Dot__move(void* self) {
     if( ( ((Dot *)self)->mPosY < 0 ) || ( ((Dot *)self)->mPosY + ((Dot *)self)->DOT_HEIGHT > SCREEN_HEIGHT ) ) {
         ((Dot *)self)->mPosY -= ((Dot *)self)->mVelY; }}
 
-void Dot__render(void* dot, LTexture* dot_texture) {
-	LTexture__render(
-		dot_texture,
-		((Dot *)dot)->mPosX,
-		((Dot *)dot)->mPosY,
-		NULL,
-		0.0,
-		NULL,
-		0); }
+
+void Dot__render(void* self) {
+	printf("%d, %d\n", ((Dot *)self)->mPosX, ((Dot *)self)->mPosY);
+	LTexture__render( &self, ((Dot *)self)->mPosX, ((Dot *)self)->mPosY, NULL, 0.0, NULL, 0 );
+	//puts("boo");
+}
 
 void glue_LTexture(LTexture* X) {
 
@@ -247,7 +244,6 @@ int main( int argc, char* args[] ) {
 
 	Dot dot;
 	glue_Dot(&dot);
-
 	dot.DOT_WIDTH = 20;
 	dot.DOT_HEIGHT = 20;
 	dot.DOT_VEL = 10;
@@ -257,6 +253,7 @@ int main( int argc, char* args[] ) {
 	dot.mVelY = 0;
 
 	int scrollingOffset = 0;
+
 
 	while( !quit ) {
 		while( SDL_PollEvent( &e ) != 0 ) {
@@ -277,9 +274,16 @@ int main( int argc, char* args[] ) {
 		gBGTexture.render( &gBGTexture, scrollingOffset, 0, NULL, 0.0, NULL, 0 );
 		gBGTexture.render( &gBGTexture, scrollingOffset + gBGTexture.getWidth(&gBGTexture), 0, NULL, 0.0, NULL, 0 );
 
-		dot.render(&dot, &gDotTexture);
+		dot.render(&dot);
 
 		SDL_RenderPresent( gRenderer ); }
+
+
+
+
+
+
+
 
 	closeSDL();
 
