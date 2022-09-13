@@ -21,7 +21,7 @@ typedef struct {
 	int mHeight;
 		
 	#if defined(SDL_TTF_MAJOR_VERSION)
-	bool loadFromRenderedText( char*, SDL_Color );
+	bool ( *loadFromRenderedText)( void*, char*, SDL_Color );
 	#endif
 
 	bool ( *loadFromFile )( void*, char* );
