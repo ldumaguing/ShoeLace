@@ -15,3 +15,17 @@ SDL2_ttf
 SDL2
 SDL2_image
 SDL2_ttf
+
+
+
+
+
+
+
+cc 31_scrolling_backgrounds.c -o 31_scrolling_backgrounds `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_ttf
+
+
+
+
+
+
