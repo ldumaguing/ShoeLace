@@ -19,3 +19,34 @@ Free:   0200-fff9
 gcc hello6_keyboard.c -o hello6 `sdl2-config --cflags --libs` -lSDL2_image
 SDL_SetWindowFullscreen(win, 1);
 
+
+
+
+**********************************************************************************************************
+
+SDL_Color GetPixelColor(const SDL_Surface* pSurface, const int X, const int Y)
+{
+  // Bytes per pixel
+  const Uint8 Bpp = pSurface->format->BytesPerPixel;
+
+  /*
+  Retrieve the address to a specific pixel
+  pSurface->pixels  = an array containing the SDL_Surface' pixels
+  pSurface->pitch       = the length of a row of pixels (in bytes)
+  X and Y               = the offset on where on the image to retrieve the pixel; (0, 0) is the upper left corner
+  */
+  Uint8* pPixel = (Uint8*)pSurface->pixels + Y * pSurface->pitch + X * Bpp;
+
+  Uint32 PixelData = *(Uint32*)pPixel;
+
+  SDL_Color Color = {0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE};
+
+  // Retrieve the RGB values of the specific pixel
+  SDL_GetRGB(PixelData, pSurface->format, &Color.r, &Color.g, &Color.b);
+
+  return Color;
+}
+
+
+
+
